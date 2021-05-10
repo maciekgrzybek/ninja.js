@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Pagination from './Pagination';
-import Row from './Row';
-import Search from './Search';
+import Pagination from './components/Pagination';
+import Row from './components/Row';
+import Search from './components/Search';
 
 class DataTable extends React.Component {
   state = {
