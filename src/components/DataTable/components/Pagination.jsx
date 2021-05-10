@@ -1,24 +1,22 @@
 import React from 'react';
 
-import Page from './Page';
+import PaginationButton from './PaginationButton';
 
 const Pagination = ({ currentPageNumber, totalNumberOfPages, onChange }) => {
+  if (totalNumberOfPages < 2) return null;
+
   const pages = Array.from(Array(totalNumberOfPages).keys()).map(
-    (pageNumber) => {
-      return (
-        <Page
-          key={pageNumber}
-          currentPageNumber={currentPageNumber}
-          pageNumber={pageNumber}
-          onChange={onChange}
-        />
-      );
-    }
+    (pageNumber) => (
+      <PaginationButton
+        key={pageNumber}
+        isActive={currentPageNumber === pageNumber}
+        onChange={() => onChange(pageNumber)}
+      >
+        {pageNumber + 1}
+      </PaginationButton>
+    )
   );
 
-  if (pages.length <= 1) {
-    return null;
-  }
   return <ul className="pagination">{pages}</ul>;
 };
 
