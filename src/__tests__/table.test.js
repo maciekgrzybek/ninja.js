@@ -6,43 +6,43 @@ import App from '../components/App/App';
 
 const mockRows = [
   {
-    name1: 'Mads L. Klausen',
+    name: 'Mads L. Klausen',
     email: 'MadsLKlausen@jourrapide.com',
     edit_path: 'http://google.com',
     per_id: 1,
   },
   {
-    name1: 'Alfred K. Krogh',
+    name: 'Alfred K. Krogh',
     email: 'AlfredKKrogh@armyspy.com',
     edit_path: 'http://google.com',
     per_id: 2,
   },
   {
-    name1: 'Silas L. Bertelsen',
+    name: 'Silas L. Bertelsen',
     email: 'SilasLBertelsen@armyspy.com',
     edit_path: 'http://google.com',
     per_id: 3,
   },
   {
-    name1: 'Mia A. Johnsen',
+    name: 'Mia A. Johnsen',
     email: 'MiaAJohnsen@dayrep.com',
     edit_path: 'http://google.com',
     per_id: 4,
   },
   {
-    name1: 'Alfred S. Schou',
+    name: 'Alfred S. Schou',
     email: 'AlfredSSchou@jourrapide.com',
     edit_path: 'http://google.com',
     per_id: 5,
   },
   {
-    name1: 'Eric Annelie',
+    name: 'Eric Annelie',
     email: 'EricAnnelie@jourrapide.com',
     edit_path: 'http://google.com',
     per_id: 6,
   },
   {
-    name1: 'Gertrud Levi',
+    name: 'Gertrud Levi',
     email: 'GertrudLevi@jourrapide.com',
     edit_path: 'http://google.com',
     per_id: 7,
@@ -59,22 +59,28 @@ describe('renders the table', () => {
   });
 
   describe('filters rows based on input', () => {
-    test('filters by name', async () => {
-      const input = screen.getByRole('searchbox');
-      userEvent.type(input, 'Mads');
+    test.each(['mads', 'MADS'])(
+      'filters by name while ignoring the casing',
+      async (searchTerm) => {
+        const input = screen.getByRole('searchbox');
+        userEvent.type(input, searchTerm);
 
-      await waitFor(() => {
-        expect(screen.getAllByRole('cell')).toHaveLength(1);
-        expect(screen.getByText(/mads l. klausen/i)).toBeInTheDocument();
-      });
-    });
+        await waitFor(() => {
+          expect(screen.getAllByRole('cell')).toHaveLength(1);
+          expect(screen.getByText(/mads l. klausen/i)).toBeInTheDocument();
+        });
+      }
+    );
 
-    test('filters by email', async () => {
-      const input = screen.getByRole('searchbox');
-      userEvent.type(input, 'jourrapide');
+    test.each(['jourrapide', 'JOURRAPIDE'])(
+      'filters by email while ignoring the casing',
+      async (searchTerm) => {
+        const input = screen.getByRole('searchbox');
+        userEvent.type(input, searchTerm);
 
-      await expect(screen.queryAllByRole('cell')).toHaveLength(4);
-    });
+        await expect(screen.queryAllByRole('cell')).toHaveLength(4);
+      }
+    );
   });
 
   describe('pagination', () => {
@@ -88,14 +94,14 @@ describe('renders the table', () => {
       const [, secondButton] = screen.getAllByRole('button');
 
       expect(screen.getAllByRole('cell')).toHaveLength(5);
-      expect(screen.getByText(mockRows[0].name1)).toHaveTextContent(
-        mockRows[0].name1
+      expect(screen.getByText(mockRows[0].name)).toHaveTextContent(
+        mockRows[0].name
       );
 
       userEvent.click(secondButton);
       expect(screen.getAllByRole('cell')).toHaveLength(2);
-      expect(screen.getByText(mockRows[5].name1)).toHaveTextContent(
-        mockRows[5].name1
+      expect(screen.getByText(mockRows[5].name)).toHaveTextContent(
+        mockRows[5].name
       );
     });
   });
